@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perpustakaan Digital Muezz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ---- Reset / Box sizing ---- */
+    * { box-sizing: border-box; }
+
+    body {
+      margin:0;
+      font-family: 'Comic Neue', cursive;
+      background: linear-gradient(to right, #fdf6e3, #fce7f3);
+      color: #333;
+      padding-bottom: 80px; /* ruang ke footer */
+    }
+
+    header {
+      background: #ffb703;
+      color: #fff;
+      padding: 18px 24px;
+      text-align: center;
+      border-bottom: 5px solid #fb8500;
+      box-shadow: 0 5px 0 #d97706;
+    }
+    header h1 { margin:0; font-size: 30px; font-weight:700; text-shadow: 2px 2px #00000020; }
+    header p { margin:6px 0 0; font-size: 15px; }
+
+    /* ---- Top area (opening + search) ----
+       Menyatukan opening + search di wadah terpusat,
+       agar jarak pasti dan tidak overlap dengan grid utama. */
+    .top-area {
+      max-width: 1300px;
+      margin: 18px auto;
+      padding: 0 24px;
+    }
+    .opening {
+      text-align:center;
+      background:#ffe6f0;
+      margin:0 auto 18px;
+      padding:16px;
+      border-radius:14px;
+      box-shadow:3px 3px 0 #00000030;
+      border:3px dashed #ff006e;
+      animation: fadeIn 0.9s ease-in-out;
+      max-width: 100%;
+    }
+    .opening h2 { margin:0 0 6px; color:#d0005f; font-size:18px; }
+    .opening p { margin:0; font-size:14px; line-height:1.4; }
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(-10px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    /* search wrapper (centered & memberi ruang) */
+    .search-wrap {
+      display:flex;
+      justify-content:center;
+      margin-top:14px;   /* ekstra jarak dari opening */
+      margin-bottom: 18px;
+    }
+    .search-box { width:100%; max-width:760px; }
+    .search-box input {
+      width:100%;
+      padding:12px 16px;
+      border-radius:12px;
+      border:3px solid #fb8500;
+      font-size:15px;
+      background: #fff3e6;
+      color:#333;
+      outline:none;
+      transition: box-shadow .18s, border-color .18s;
+    }
+    .search-box input:focus { border-color:#ff006e; box-shadow:0 6px 18px rgba(255,0,110,0.08); background:#ffe6f0; }
+
+    /* ---- Layout utama ---- */
+    main {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 36px;                /* jarak antar kolom lebih lega */
+      padding: 0 24px 32px;
+      max-width:1300px;
+      margin: 0 auto;
+      align-items: start;       /* semua kolom sejajar dari atas */
+    }
+    @media (max-width:1000px){
+      main { grid-template-columns: 1fr; gap: 20px; padding: 0 18px 28px; }
+      .book { align-items:center; }
+      .book img { width:72px; height:96px; }
+      .book-detail img { width:120px; }
+    }
+
+    /* Book list (kolom kiri) */
+    .book-list {
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
+      padding-top: 6px;         /* sedikit ruang atas agar tidak nempel */
+    }
+    .book {
+      display:flex;
+      gap:16px;
+      background:#fffbeb;
+      border:3px solid #fb8500;
+      padding:12px;
+      border-radius:14px;
+      cursor:pointer;
+      transition: transform .18s;
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.18);
+      min-height: 90px;        /* jaga tinggi agar rapi */
+    }
+    .book:hover { transform: translateY(-4px) rotate(-0.6deg); background:#fff4d4; }
+    .book img {
+      width:90px; height:120px; object-fit:cover; border-radius:8px;
+      border:3px solid #ff006e; flex-shrink:0;
+    }
+    .book .meta { display:flex; flex-direction:column; justify-content:space-between; }
+
+    .stars { color:#ffb703; font-size:14px; margin-top:4px; }
+
+    /* Book detail (kolom tengah) */
+    .book-detail {
+      background: #ffe6f0;
+      border:4px dashed #ff006e;
+      border-radius:12px;
+      padding:14px;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.18);
+      min-height: 140px;      /* mencegah tinggi terlalu kecil */
+    }
+    .book-detail h2 { margin-top:0; font-size:20px; color:#d0005f; }
+    .book-detail img { width:150px; border-radius:8px; margin-bottom:12px; border:3px solid #ffb703; display:block; }
+
+    .book-detail button {
+      background: #ff006e; color:white; border:none; border-radius:8px;
+      padding:10px 16px; cursor:pointer; font-size:14px;
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.18);
+    }
+    .book-detail button:hover { background:#d0005f; transform: scale(1.03); }
+
+    /* Rak pinjaman (kolom kanan) */
+    .borrowed {
+      background: #e0f7fa;
+      border:3px solid #06b6d4;
+      border-radius:12px;
+      padding:14px;
+      max-height: 70vh;
+      overflow:auto;
+    }
+    .borrowed h2 { margin-top:0; font-size:18px; color:#0284c7; }
+    .borrowed ul { list-style:none; padding:0; margin:0; }
+    .borrowed li { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:2px dashed #06b6d4; }
+    .borrowed button { background:#ef4444; color:white; border:none; border-radius:6px; padding:6px 10px; font-size:13px; }
+
+    /* Modal pinjam */
+    .modal {
+      display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.55); justify-content:center; align-items:center; z-index:2000;
+    }
+    .modal-content {
+      background:white; padding:20px; border-radius:12px; text-align:center; width:300px; box-shadow:4px 4px 0 rgba(0,0,0,0.2);
+    }
+    .modal-content input { width:80px; padding:6px; text-align:center; font-size:16px; margin:10px; }
+    .modal-content button { margin:5px; padding:8px 14px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+    .ok-btn { background:#06b6d4; color:white; }
+    .cancel-btn { background:#ef4444; color:white; }
+
+    /* Footer */
+    footer {
+      text-align:center;
+      background:#ffb703;
+      color:#fff;
+      padding:14px;
+      border-top:5px solid #fb8500;
+      margin-top: 40px;
+      box-shadow: 0 -3px 0 #d97706;
+      font-weight:bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📚 Perpustakaan Digital Muezz</h1>
+    <p>Nuansa Kartun - Komik & Manga Favoritmu 🎨</p>
+  </header>
+
+  <!-- TOP AREA: Opening + Search (terpusat, meminimalkan overlap) -->
+  <div class="top-area">
+    <div class="opening">
+      <h2>👋 Selamat Datang!</h2>
+      <p>Halo sahabat pembaca, selamat datang di <strong>Perpustakaan Digital Muezz</strong>. Temukan koleksi komik & manga favoritmu. Selamat membaca!</p>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Cari komik..." />
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <main>
+    <section>
+      <div id="bookList" class="book-list"></div>
+    </section>
+
+    <aside class="book-detail" id="bookDetail">
+      <h2>Detail Komik</h2>
+      <p><em>Klik salah satu komik untuk melihat detailnya...</em></p>
+    </aside>
+
+    <aside class="borrowed">
+      <h2>Rak Pinjaman</h2>
+      <ul id="borrowedList"></ul>
+    </aside>
+  </main>
+
+  <footer>🎉 Perpustakaan Digital Muezz © 2025 - Nuansa Komik & Kartun 🎨</footer>
+
+  <!-- Modal -->
+  <div class="modal" id="borrowModal">
+    <div class="modal-content">
+      <h3>Mau pinjam berapa hari?</h3>
+      <input type="number" id="daysInput" value="7" min="1" />
+      <div>
+        <button class="ok-btn" id="confirmBorrow">OK</button>
+        <button class="cancel-btn" id="cancelBorrow">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const books = [
+      { id:1, title:"Naruto", author:"Masashi Kishimoto", cover:"naruto.jpg", description:"Perjalanan Naruto Uzumaki mengejar mimpinya menjadi Hokage.", rating:5 },
+      { id:2, title:"One Piece", author:"Eiichiro Oda", cover:"onepiece.jpg", description:"Petualangan Monkey D. Luffy mencari harta karun legendaris One Piece.", rating:5 },
+      { id:3, title:"Doraemon", author:"Fujiko F. Fujio", cover:"doraemon.jpg", description:"Kucing robot dari abad 22 membantu Nobita dengan alat ajaib.", rating:4 },
+      { id:4, title:"Dragon Ball", author:"Akira Toriyama", cover:"dragon.jpg", description:"Son Goku berpetualang mencari bola naga dan melindungi bumi.", rating:5 },
+      { id:5, title:"Detective Conan", author:"Gosho Aoyama", cover:"Conan.jpg", description:"Kisah detektif muda Shinichi Kudo yang berubah menjadi anak kecil.", rating:4 },
+      { id:6, title:"Crayon Shin-chan", author:"Yoshito Usui", cover:"shincan.jpg", description:"Tingkah kocak Shinnosuke Nohara dalam kehidupan sehari-hari.", rating:4 }
+    ];
+
+    let borrowed = JSON.parse(localStorage.getItem("borrowedBooks")) || [];
+    const bookListEl = document.getElementById("bookList");
+    const borrowedListEl = document.getElementById("borrowedList");
+    const searchInput = document.getElementById("searchInput");
+    const bookDetailEl = document.getElementById("bookDetail");
+
+    let tempBook = null;
+
+    function renderStars(rating){ return "⭐".repeat(rating) + "☆".repeat(5-rating); }
+
+    function renderBooks(filter="") {
+      bookListEl.innerHTML = "";
+      books.filter(b => b.title.toLowerCase().includes(filter.toLowerCase()))
+           .forEach(b => {
+        const div = document.createElement("div");
+        div.className = "book";
+        div.innerHTML = `
+          <img src="${b.cover}" alt="${b.title}">
+          <div class="meta">
+            <div>
+              <h3 style="margin:0 0 6px;">${b.title}</h3>
+              <p style="margin:0 0 6px; color:#555;">${b.author}</p>
+            </div>
+            <div class="stars">${renderStars(b.rating)}</div>
+          </div>
+        `;
+        div.addEventListener("click", () => showDetail(b.id));
+        bookListEl.appendChild(div);
+      });
+    }
+
+    function renderBorrowed() {
+      borrowedListEl.innerHTML = "";
+      if(borrowed.length === 0){ borrowedListEl.innerHTML = "<li><em>Belum ada komik dipinjam</em></li>"; return; }
+      borrowed.forEach(b => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span>${b.title} <small>(${b.days} hari)</small></span>
+                        <button onclick="returnBook(${b.id})">Kembalikan</button>`;
+        borrowedListEl.appendChild(li);
+      });
+    }
+
+    function showDetail(id){
+      const book = books.find(b => b.id === id);
+      bookDetailEl.innerHTML = `
+        <img src="${book.cover}" alt="${book.title}">
+        <h2>${book.title}</h2>
+        <p><strong>Pengarang:</strong> ${book.author}</p>
+        <p>${book.description}</p>
+        <div class="stars">${renderStars(book.rating)}</div>
+        <button onclick="openBorrowModal(${book.id})">📖 Pinjam Komik</button>
+      `;
+    }
+
+    function openBorrowModal(id){
+      if(borrowed.some(b => b.id === id)){ alert("Komik ini sudah ada di rak pinjaman."); return; }
+      tempBook = books.find(b => b.id === id);
+      document.getElementById("borrowModal").style.display = "flex";
+      document.getElementById("daysInput").focus();
+    }
+
+    function confirmBorrow(){
+      const days = parseInt(document.getElementById("daysInput").value);
+      if(days > 0){
+        borrowed.push({...tempBook, days});
+        saveBorrowed(); renderBorrowed();
+        closeBorrowModal();
+      } else { alert("Masukkan jumlah hari valid!"); }
+    }
+
+    function closeBorrowModal(){ document.getElementById("borrowModal").style.display = "none"; }
+
+    function returnBook(id){ borrowed = borrowed.filter(b => b.id !== id); saveBorrowed(); renderBorrowed(); }
+
+    function saveBorrowed(){ localStorage.setItem("borrowedBooks", JSON.stringify(borrowed)); }
+
+    // Event modal
+    document.getElementById("confirmBorrow").addEventListener("click", confirmBorrow);
+    document.getElementById("cancelBorrow").addEventListener("click", closeBorrowModal);
+
+    // Search input
+    searchInput.addEventListener("input", e => renderBooks(e.target.value));
+
+    // Initial render
+    renderBooks();
+    renderBorrowed();
+  </script>
+</body>
+</html>
